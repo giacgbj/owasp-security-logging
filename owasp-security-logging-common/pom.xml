@@ -1,44 +1,44 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
-  <modelVersion>4.0.0</modelVersion>
-  <parent>
-    <artifactId>security-logging</artifactId>
-    <groupId>org.owasp</groupId>
-    <version>1.1.4-SNAPSHOT</version>
-    <relativePath>../pom.xml</relativePath>
-  </parent>
-  <artifactId>security-logging-common</artifactId>
-  <name>OWASP Security Logging Common</name>
-  <description>The OWASP Security Logging project provides developers and ops personnel with APIs for logging security-related events.</description>
-  <url>https://www.owasp.org/index.php/OWASP_Security_Logging_Project</url>
-  <licenses>
-    <license>
-      <name>The Apache License, Version 2.0</name>
-      <url>http://www.apache.org/licenses/LICENSE-2.0.txt</url>
-    </license>
-  </licenses>
-  <developers>
-    <developer>
-      <name>August Detlefsen</name>
-      <email>augustd@codemagi.com</email>
-      <organization>CodeMagi, Inc.</organization>
-      <organizationUrl>http://www.codemagi.com</organizationUrl>
-    </developer>
-  </developers>
-  <scm>
-    <connection>scm:git:git@github.com:javabeanz/owasp-security-logging.git</connection>
-    <developerConnection>scm:git:git@github.com:javabeanz/owasp-security-logging.git</developerConnection>
-    <url>https://github.com/javabeanz/owasp-security-logging</url>
-  </scm>
-  <dependencies>
-    <dependency>
-      <groupId>org.slf4j</groupId>
-      <artifactId>slf4j-api</artifactId>
-    </dependency>
-    <dependency>
-      <groupId>javax.servlet</groupId>
-      <artifactId>javax.servlet-api</artifactId>
-      <scope>provided</scope>
-    </dependency>
-  </dependencies>
+	<modelVersion>4.0.0</modelVersion>
+	<parent>
+		<artifactId>security-logging</artifactId>
+		<groupId>org.owasp</groupId>
+		<version>1.1.4-SNAPSHOT</version>
+		<relativePath>../pom.xml</relativePath>
+	</parent>
+	<artifactId>security-logging-common</artifactId>
+	<name>OWASP Security Logging Common</name>
+	<description>The OWASP Security Logging project provides developers and ops personnel with APIs for logging security-related events.</description>
+	<url>https://www.owasp.org/index.php/OWASP_Security_Logging_Project</url>
+	<licenses>
+		<license>
+			<name>The Apache License, Version 2.0</name>
+			<url>http://www.apache.org/licenses/LICENSE-2.0.txt</url>
+		</license>
+	</licenses>
+	<developers>
+		<developer>
+			<name>August Detlefsen</name>
+			<email>augustd@codemagi.com</email>
+			<organization>CodeMagi, Inc.</organization>
+			<organizationUrl>http://www.codemagi.com</organizationUrl>
+		</developer>
+	</developers>
+	<scm>
+		<connection>scm:git:git@github.com:javabeanz/owasp-security-logging.git</connection>
+		<developerConnection>scm:git:git@github.com:javabeanz/owasp-security-logging.git</developerConnection>
+		<url>https://github.com/javabeanz/owasp-security-logging</url>
+	</scm>
+	<dependencies>
+		<dependency>
+			<groupId>org.slf4j</groupId>
+			<artifactId>slf4j-api</artifactId>
+		</dependency>
+		<dependency>
+			<groupId>javax.servlet</groupId>
+			<artifactId>javax.servlet-api</artifactId>
+			<scope>provided</scope>
+		</dependency>
+	</dependencies>
 </project>

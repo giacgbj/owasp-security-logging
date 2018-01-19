@@ -31,87 +31,80 @@ import org.apache.logging.slf4j.Log4jMarkerFactory;
 import org.owasp.security.logging.SecurityMarkers;
 
 /**
- * Filters logging for information classification markers. If a logging event
- * has a an information classification marker (RESTRICTED, CONFIDENTIAL, SECRET,
- * TOP_SECRET) attached to it, it will fail the filter.
+ * Filters logging for information classification markers. If a logging event has a an information classification marker (RESTRICTED, CONFIDENTIAL, SECRET, TOP_SECRET) attached to it, it will fail the
+ * filter.
  *
- * This is useful to <i>exclude</i> classified information from a general log
- * file.
+ * This is useful to <i>exclude</i> classified information from a general log file.
  *
  * @author August Detlefsen [augustd@codemagi.com]
  */
 @Plugin(name = "ExcludeClassifiedMarkerFilter", category = Node.CATEGORY, elementType = Filter.ELEMENT_TYPE, printObject = true)
 public class ExcludeClassifiedMarkerFilter extends AbstractFilter {
 
-	/**
-	 * 
-	 */
-	private static final long serialVersionUID = -532744149133457152L;
+    /**
+     * 
+     */
+    private static final long serialVersionUID = -532744149133457152L;
 
-	static final Log4jMarkerFactory factory = new Log4jMarkerFactory();
+    static final Log4jMarkerFactory factory = new Log4jMarkerFactory();
 
-	public static final List<org.slf4j.Marker> markersToMatch = new ArrayList<org.slf4j.Marker>(
-			4);
+    public static final List<org.slf4j.Marker> markersToMatch = new ArrayList<>(4);
 
-	static {
-		markersToMatch.add(SecurityMarkers.RESTRICTED);
-		markersToMatch.add(SecurityMarkers.CONFIDENTIAL);
-		markersToMatch.add(SecurityMarkers.SECRET);
-		markersToMatch.add(SecurityMarkers.TOP_SECRET);
-	}
+    static {
+        markersToMatch.add(SecurityMarkers.RESTRICTED);
+        markersToMatch.add(SecurityMarkers.CONFIDENTIAL);
+        markersToMatch.add(SecurityMarkers.SECRET);
+        markersToMatch.add(SecurityMarkers.TOP_SECRET);
+    }
 
-	@Override
-	public Result filter(Logger logger, Level level, Marker marker, String msg,
-			Object... params) {
-		return filter(marker);
-	}
+    @Override
+    public Result filter(Logger logger, Level level, Marker marker, String msg, Object... params) {
+        return filter(marker);
+    }
 
-	@Override
-	public Result filter(Logger logger, Level level, Marker marker, Object msg,
-			Throwable t) {
-		return filter(marker);
-	}
+    @Override
+    public Result filter(Logger logger, Level level, Marker marker, Object msg, Throwable t) {
+        return filter(marker);
+    }
 
-	@Override
-	public Result filter(Logger logger, Level level, Marker marker,
-			Message msg, Throwable t) {
-		return filter(marker);
-	}
+    @Override
+    public Result filter(Logger logger, Level level, Marker marker, Message msg, Throwable t) {
+        return filter(marker);
+    }
 
-	@Override
-	public Result filter(LogEvent event) {
-		// make sure the event has a marker
-		org.apache.logging.log4j.Marker eventMarker = event.getMarker();
-		if (eventMarker == null) {
-			return Result.NEUTRAL;
-		}
+    @Override
+    public Result filter(LogEvent event) {
+        // make sure the event has a marker
+        org.apache.logging.log4j.Marker eventMarker = event.getMarker();
+        if (eventMarker == null) {
+            return Result.NEUTRAL;
+        }
 
-		return filter(eventMarker);
-	}
+        return filter(eventMarker);
+    }
 
-	private Result filter(Marker marker) {
-		if (!isStarted()) {
-			return Result.NEUTRAL;
-		}
+    private Result filter(Marker marker) {
+        if (!isStarted()) {
+            return Result.NEUTRAL;
+        }
 
-		org.apache.logging.slf4j.Log4jMarker slf4jMarker = new Log4jMarker(
-				marker);
-		for (org.slf4j.Marker matcher : markersToMatch) {
-			if (slf4jMarker.contains(matcher.getName())) {
-				return Result.DENY;
-			}
-		}
+        org.apache.logging.slf4j.Log4jMarker slf4jMarker = new Log4jMarker(marker);
+        for (org.slf4j.Marker matcher : markersToMatch) {
+            if (slf4jMarker.contains(matcher.getName())) {
+                return Result.DENY;
+            }
+        }
 
-		return Result.NEUTRAL;
-	}
+        return Result.NEUTRAL;
+    }
 
-	/**
-	 * Create a SecurityMarkerFilter.
-	 *
-	 * @return The created ThresholdFilter.
-	 */
-	@PluginFactory
-	public static ExcludeClassifiedMarkerFilter createFilter() {
-		return new ExcludeClassifiedMarkerFilter();
-	}
+    /**
+     * Create a SecurityMarkerFilter.
+     *
+     * @return The created ThresholdFilter.
+     */
+    @PluginFactory
+    public static ExcludeClassifiedMarkerFilter createFilter() {
+        return new ExcludeClassifiedMarkerFilter();
+    }
 }

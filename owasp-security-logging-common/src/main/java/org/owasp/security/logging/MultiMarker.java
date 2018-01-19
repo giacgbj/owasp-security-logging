@@ -26,98 +26,106 @@ import org.slf4j.Marker;
  */
 public class MultiMarker implements org.slf4j.Marker {
 
-	/**
-	 * 
-	 */
-	private static final long serialVersionUID = 2438877789519766569L;
-	private String name = "";
-	private final Set<Marker> references = new LinkedHashSet<Marker>();
+    /**
+     * 
+     */
+    private static final long serialVersionUID = 2438877789519766569L;
+    private String name = "";
+    private final Set<Marker> references = new LinkedHashSet<>();
 
-	public MultiMarker(Marker... markers) {
-		references.addAll(Arrays.asList(markers));
-		updateName();
-	}
+    public MultiMarker(Marker... markers) {
+        references.addAll(Arrays.asList(markers));
+        updateName();
+    }
 
-	public String getName() {
-		return name;
-	}
+    @Override
+    public String getName() {
+        return name;
+    }
 
-	public void add(Marker reference) {
-		references.add(reference);
-		updateName();
-	}
+    @Override
+    public void add(Marker reference) {
+        references.add(reference);
+        updateName();
+    }
 
-	public boolean remove(Marker reference) {
-		boolean output = references.remove(reference);
-		updateName();
-		return output;
-	}
+    @Override
+    public boolean remove(Marker reference) {
+        boolean output = references.remove(reference);
+        updateName();
+        return output;
+    }
 
-	private void updateName() {
-		name = "";
-		StringBuilder builder = new StringBuilder();
-		for (Marker ref : references) {
-			if (!Utils.isEmpty(name)) {
-				builder.append(" ");
-			}
-			builder.append(ref.getName());
-		}
-		name = builder.toString();
-	}
+    private void updateName() {
+        name = "";
+        StringBuilder builder = new StringBuilder();
+        for (Marker ref : references) {
+            if (!Utils.isEmpty(name)) {
+                builder.append(" ");
+            }
+            builder.append(ref.getName());
+        }
+        name = builder.toString();
+    }
 
-	public boolean hasChildren() {
-		return true;
-	}
+    @Override
+    public boolean hasChildren() {
+        return true;
+    }
 
-	public boolean hasReferences() {
-		return true;
-	}
+    @Override
+    public boolean hasReferences() {
+        return true;
+    }
 
-	public Iterator<Marker> iterator() {
-		return references.iterator();
-	}
+    @Override
+    public Iterator<Marker> iterator() {
+        return references.iterator();
+    }
 
-	public boolean contains(Marker other) {
-		for (Marker ref : references) {
-			if (ref.contains(other)) {
-				return true;
-			}
-		}
-		return false;
-	}
+    @Override
+    public boolean contains(Marker other) {
+        for (Marker ref : references) {
+            if (ref.contains(other)) {
+                return true;
+            }
+        }
+        return false;
+    }
 
-	public boolean contains(String name) {
-		for (Marker ref : references) {
-			if (ref.contains(name)) {
-				return true;
-			}
-		}
-		return false;
-	}
+    @Override
+    public boolean contains(String name) {
+        for (Marker ref : references) {
+            if (ref.contains(name)) {
+                return true;
+            }
+        }
+        return false;
+    }
 
-	@Override
-	public boolean equals(Object obj) {
-		if (this == obj) {
-			return true;
-		}
-		if (obj == null) {
-			return false;
-		}
-		if (!(obj instanceof Marker)) {
-			return false;
-		}
+    @Override
+    public boolean equals(Object obj) {
+        if (this == obj) {
+            return true;
+        }
+        if (obj == null) {
+            return false;
+        }
+        if (!(obj instanceof Marker)) {
+            return false;
+        }
 
-		final Marker other = (Marker) obj;
-		return name.equals(other.getName());
-	}
+        final Marker other = (Marker) obj;
+        return name.equals(other.getName());
+    }
 
-	@Override
-	public int hashCode() {
-		return name.hashCode();
-	}
+    @Override
+    public int hashCode() {
+        return name.hashCode();
+    }
 
-	@Override
-	public String toString() {
-		return name;
-	}
+    @Override
+    public String toString() {
+        return name;
+    }
 }

@@ -17,7 +17,7 @@ import static org.junit.Assert.assertTrue;
 
 import org.apache.logging.log4j.core.LogEvent;
 import org.apache.logging.log4j.core.pattern.EncodingPatternConverter;
-import org.apache.logging.log4j.junit.InitialLoggerContext;
+import org.apache.logging.log4j.junit.LoggerContextRule;
 import org.apache.logging.log4j.test.appender.ListAppender;
 import org.junit.After;
 import org.junit.Before;
@@ -28,50 +28,45 @@ import org.mockito.runners.MockitoJUnitRunner;
 import org.slf4j.LoggerFactory;
 
 /**
- * Log4j already includes a converter to escape carriage returns and line feeds.
- * This test just verifies that it works as expected.
+ * Log4j already includes a converter to escape carriage returns and line feeds. This test just verifies that it works as expected.
  * 
  * @author August Detlefsen [augustd@codemagi.com]
  */
 @RunWith(MockitoJUnitRunner.class)
 public class CRLFConverterTest {
 
-	private static final String CONFIG = "log4j2.xml";
+    private static final String CONFIG = "log4j2.xml";
 
-	@ClassRule
-	public static InitialLoggerContext context = new InitialLoggerContext(
-			CONFIG);
+    @ClassRule
+    public static LoggerContextRule context = new LoggerContextRule(CONFIG);
 
-	private static final org.slf4j.Logger LOGGER = LoggerFactory
-			.getLogger(CRLFConverterTest.class);
+    private static final org.slf4j.Logger LOGGER = LoggerFactory.getLogger(CRLFConverterTest.class);
 
-	ListAppender appender;
+    ListAppender appender;
 
-	@Before
-	public void setUp() {
-		System.out.println("CONTEXT: " + context);
-		appender = context.getListAppender("List");
-	}
+    @Before
+    public void setUp() {
+        System.out.println("CONTEXT: " + context);
+        appender = context.getListAppender("List");
+    }
 
-	@After
-	public void teardown() {
-	}
+    @After
+    public void teardown() {
+    }
 
-	@Test
-	public void test() {
-		LOGGER.info("This message contains \r\n line feeds");
+    @Test
+    public void test() {
+        LOGGER.info("This message contains \r\n line feeds");
 
-		// Check the message being logged is correct
-		LogEvent nulEvent = appender.getEvents().get(0);
+        // Check the message being logged is correct
+        LogEvent nulEvent = appender.getEvents().get(0);
 
-		final String[] options = new String[] { "%msg" };
-		final EncodingPatternConverter converter = EncodingPatternConverter
-				.newInstance(context.getConfiguration(), options);
-		final StringBuilder sb = new StringBuilder();
-		converter.format(nulEvent, sb);
+        final String[] options = new String[] { "%msg" };
+        final EncodingPatternConverter converter = EncodingPatternConverter.newInstance(context.getConfiguration(), options);
+        final StringBuilder sb = new StringBuilder();
+        converter.format(nulEvent, sb);
 
-		assertTrue(sb.toString().contains(
-				"This message contains \\r\\n line feeds"));
-	}
+        assertTrue(sb.toString().contains("This message contains \\r\\n line feeds"));
+    }
 
 }

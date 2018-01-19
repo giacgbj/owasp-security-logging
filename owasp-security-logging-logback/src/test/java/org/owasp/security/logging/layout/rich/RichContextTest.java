@@ -9,25 +9,25 @@ import ch.qos.logback.classic.spi.LoggingEvent;
 
 public class RichContextTest {
 
-	private LoggingEvent event = new LoggingEvent();
-	{
-		event.setTimeStamp(999);
-	}
-	private RichContext ctx = new RichContext(event);
+    private LoggingEvent event = new LoggingEvent();
+    {
+        event.setTimeStamp(999);
+    }
+    private RichContext ctx = new RichContext(event);
 
-	@Test
-	public void testGetPID() {
-		assertTrue(RichContext.getPID() > 0);
-	}
+    @Test
+    public void testGetPID() {
+        assertTrue(RichContext.getPID() > 0);
+    }
 
-	// @Test
-	public void testGetApplicationName() {
-		assertEquals("JUnit", ctx.getApplicationName());
-	}
+    // @Test
+    public void testGetApplicationName() {
+        assertEquals("JUnit", ctx.getApplicationName());
+    }
 
-	@Test
-	public void testToString() {
-		System.out.println(ctx.toString());
-	}
+    @Test
+    public void testToString() {
+        System.out.println(ctx.toString());
+    }
 
 }

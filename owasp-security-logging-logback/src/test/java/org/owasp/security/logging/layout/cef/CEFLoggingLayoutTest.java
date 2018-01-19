@@ -11,16 +11,13 @@ import ch.qos.logback.classic.spi.LoggingEvent;
 
 public class CEFLoggingLayoutTest {
 
-	private Logger logger = ((LoggerContext) LoggerFactory.getILoggerFactory())
-			.getLogger("test");
+    private Logger logger = ((LoggerContext) LoggerFactory.getILoggerFactory()).getLogger("test");
 
-	@Test
-	public void test() {
-		CEFLoggingLayout layout = new CEFLoggingLayout();
-		ILoggingEvent event = new LoggingEvent("Wifi connection tampered with",
-				logger, Level.DEBUG, "Someother", (Throwable) null,
-				(Object[]) null);
-		System.out.println(layout.doLayout(event));
-	}
+    @Test
+    public void test() {
+        CEFLoggingLayout layout = new CEFLoggingLayout();
+        ILoggingEvent event = new LoggingEvent("Wifi connection tampered with", logger, Level.DEBUG, "Someother", (Throwable) null, (Object[]) null);
+        System.out.println(layout.doLayout(event));
+    }
 
 }

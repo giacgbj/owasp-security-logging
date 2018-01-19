@@ -32,84 +32,77 @@ import org.apache.logging.slf4j.Log4jMarkerFactory;
 import org.owasp.security.logging.SecurityMarkers;
 
 /**
- * Filters logging for SECURITY markers. If a logging event has a SECURITY
- * marker attached to it, it will pass the filter. This is useful to route
- * security related events to a separate log file.
+ * Filters logging for SECURITY markers. If a logging event has a SECURITY marker attached to it, it will pass the filter. This is useful to route security related events to a separate log file.
  *
  * @author August Detlefsen [augustd@codemagi.com]
  */
 @Plugin(name = "SecurityMarkerFilter", category = Node.CATEGORY, elementType = Filter.ELEMENT_TYPE, printObject = true)
 public class SecurityMarkerFilter extends AbstractFilter {
 
-	/**
-	 * 
-	 */
-	private static final long serialVersionUID = 610457881503552839L;
+    /**
+     * 
+     */
+    private static final long serialVersionUID = 610457881503552839L;
 
-	static final Log4jMarkerFactory factory = new Log4jMarkerFactory();
+    static final Log4jMarkerFactory factory = new Log4jMarkerFactory();
 
-	public static final List<org.slf4j.Marker> markersToMatch = new ArrayList<org.slf4j.Marker>(3);
+    public static final List<org.slf4j.Marker> markersToMatch = new ArrayList<>(3);
 
-	static {
-		markersToMatch.add(SecurityMarkers.SECURITY_SUCCESS);
-		markersToMatch.add(SecurityMarkers.SECURITY_FAILURE);
-		markersToMatch.add(SecurityMarkers.SECURITY_AUDIT);
-	}
+    static {
+        markersToMatch.add(SecurityMarkers.SECURITY_SUCCESS);
+        markersToMatch.add(SecurityMarkers.SECURITY_FAILURE);
+        markersToMatch.add(SecurityMarkers.SECURITY_AUDIT);
+    }
 
-	@Override
-	public Result filter(Logger logger, Level level, Marker marker, String msg,
-			Object... params) {
-		return filter(marker);
-	}
+    @Override
+    public Result filter(Logger logger, Level level, Marker marker, String msg, Object... params) {
+        return filter(marker);
+    }
 
-	@Override
-	public Result filter(Logger logger, Level level, Marker marker, Object msg,
-			Throwable t) {
-		return filter(marker);
-	}
+    @Override
+    public Result filter(Logger logger, Level level, Marker marker, Object msg, Throwable t) {
+        return filter(marker);
+    }
 
-	@Override
-	public Result filter(Logger logger, Level level, Marker marker,
-			Message msg, Throwable t) {
-		return filter(marker);
-	}
+    @Override
+    public Result filter(Logger logger, Level level, Marker marker, Message msg, Throwable t) {
+        return filter(marker);
+    }
 
-	@Override
-	public Result filter(LogEvent event) {
-		// make sure the event has a marker
-		org.apache.logging.log4j.Marker eventMarker = event.getMarker();
-		if (eventMarker == null) {
-			return Result.DENY;
-		}
+    @Override
+    public Result filter(LogEvent event) {
+        // make sure the event has a marker
+        org.apache.logging.log4j.Marker eventMarker = event.getMarker();
+        if (eventMarker == null) {
+            return Result.DENY;
+        }
 
-		return filter(eventMarker);
-	}
+        return filter(eventMarker);
+    }
 
-	private Result filter(Marker marker) {
-		if (!isStarted()) {
-			return Result.NEUTRAL;
-		}
+    private Result filter(Marker marker) {
+        if (!isStarted()) {
+            return Result.NEUTRAL;
+        }
 
-		org.apache.logging.slf4j.Log4jMarker slf4jMarker = new Log4jMarker(
-				marker);
-		for (org.slf4j.Marker matcher : markersToMatch) {
-			if (slf4jMarker.contains(matcher.getName())) {
-				return Result.ACCEPT;
-			}
-		}
+        org.apache.logging.slf4j.Log4jMarker slf4jMarker = new Log4jMarker(marker);
+        for (org.slf4j.Marker matcher : markersToMatch) {
+            if (slf4jMarker.contains(matcher.getName())) {
+                return Result.ACCEPT;
+            }
+        }
 
-		return Result.DENY;
-	}
+        return Result.DENY;
+    }
 
-	/**
-	 * Create a SecurityMarkerFilter.
-	 *
-	 * @param acceptAll
-	 * @return The created ThresholdFilter.
-	 */
-	@PluginFactory
-	public static SecurityMarkerFilter createFilter(
-			@PluginAttribute(value = "acceptAll", defaultBoolean = false) boolean acceptAll) {
-		return new SecurityMarkerFilter();
-	}
+    /**
+     * Create a SecurityMarkerFilter.
+     *
+     * @param acceptAll
+     * @return The created ThresholdFilter.
+     */
+    @PluginFactory
+    public static SecurityMarkerFilter createFilter(@PluginAttribute(value = "acceptAll", defaultBoolean = false) boolean acceptAll) {
+        return new SecurityMarkerFilter();
+    }
 }
