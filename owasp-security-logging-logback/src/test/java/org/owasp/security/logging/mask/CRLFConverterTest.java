@@ -13,6 +13,21 @@
  */
 package org.owasp.security.logging.mask;
 
+import static org.hamcrest.CoreMatchers.is;
+import static org.junit.Assert.assertThat;
+import static org.junit.Assert.assertTrue;
+import static org.mockito.Mockito.verify;
+
+import org.junit.After;
+import org.junit.Before;
+import org.junit.Test;
+import org.junit.runner.RunWith;
+import org.mockito.ArgumentCaptor;
+import org.mockito.Captor;
+import org.mockito.Mock;
+import org.mockito.runners.MockitoJUnitRunner;
+import org.slf4j.LoggerFactory;
+
 //import ch.qos.logback.classic.PatternLayoutEncoder;
 import ch.qos.logback.classic.Level;
 import ch.qos.logback.classic.Logger;
@@ -22,24 +37,6 @@ import ch.qos.logback.classic.encoder.PatternLayoutEncoder;
 import ch.qos.logback.classic.spi.ILoggingEvent;
 import ch.qos.logback.classic.spi.LoggingEvent;
 import ch.qos.logback.core.rolling.RollingFileAppender;
-import static org.hamcrest.CoreMatchers.is;
-
-import org.junit.After;
-
-import static org.junit.Assert.assertThat;
-import static org.junit.Assert.assertTrue;
-
-import org.junit.Before;
-import org.junit.Test;
-import org.junit.runner.RunWith;
-import org.mockito.ArgumentCaptor;
-import org.mockito.Captor;
-import org.mockito.Mock;
-
-import static org.mockito.Mockito.verify;
-
-import org.mockito.runners.MockitoJUnitRunner;
-import org.slf4j.LoggerFactory;
 
 /**
  *
@@ -48,68 +45,65 @@ import org.slf4j.LoggerFactory;
 @RunWith(MockitoJUnitRunner.class)
 public class CRLFConverterTest {
 
-	LoggerContext loggerContext = (LoggerContext) LoggerFactory
-			.getILoggerFactory();
+    LoggerContext loggerContext = (LoggerContext) LoggerFactory.getILoggerFactory();
 
-	Logger LOGGER;
+    Logger LOGGER;
 
-	PatternLayoutEncoder encoder;
+    PatternLayoutEncoder encoder;
 
-	PatternLayout layout;
+    PatternLayout layout;
 
-	@Mock
-	private RollingFileAppender<ILoggingEvent> mockAppender = new RollingFileAppender<ILoggingEvent>();
+    @Mock
+    private RollingFileAppender<ILoggingEvent> mockAppender = new RollingFileAppender<>();
 
-	// Captor is genericised with ch.qos.logback.classic.spi.LoggingEvent
-	@Captor
-	private ArgumentCaptor<LoggingEvent> captorLoggingEvent;
+    // Captor is genericised with ch.qos.logback.classic.spi.LoggingEvent
+    @Captor
+    private ArgumentCaptor<LoggingEvent> captorLoggingEvent;
 
-	@Before
-	public void setUp() {
-		PatternLayout.defaultConverterMap.put("crlf",
-				CRLFConverter.class.getName());
-		// layout = new PatternLayout();
+    @Before
+    public void setUp() {
+        PatternLayout.defaultConverterMap.put("crlf", CRLFConverter.class.getName());
+        // layout = new PatternLayout();
 
-		encoder = new PatternLayoutEncoder();
-		encoder.setContext(loggerContext);
-		encoder.setPattern("%-4relative [%thread] %-5level %logger{35} - %crlf(%msg)%n");
-		encoder.start();
+        encoder = new PatternLayoutEncoder();
+        encoder.setContext(loggerContext);
+        encoder.setPattern("%-4relative [%thread] %-5level %logger{35} - %crlf(%msg)%n");
+        encoder.start();
 
-		// Layout layout = new PatternLayout();
-		// layout.setEncoder(encoder);
+        // Layout layout = new PatternLayout();
+        // layout.setEncoder(encoder);
 
-		mockAppender.setContext(loggerContext);
-		mockAppender.setEncoder(encoder);
-		mockAppender.start();
+        mockAppender.setContext(loggerContext);
+        mockAppender.setEncoder(encoder);
+        mockAppender.start();
 
-		LOGGER = (Logger) LoggerFactory.getLogger(Logger.ROOT_LOGGER_NAME);
-		LOGGER.addAppender(mockAppender);
-	}
+        LOGGER = (Logger) LoggerFactory.getLogger(Logger.ROOT_LOGGER_NAME);
+        LOGGER.addAppender(mockAppender);
+    }
 
-	@After
-	public void teardown() {
-		LOGGER.detachAppender(mockAppender);
-	}
+    @After
+    public void teardown() {
+        LOGGER.detachAppender(mockAppender);
+    }
 
-	@Test
-	public void test() {
-		LOGGER.info("This message contains \r\n line feeds");
+    @Test
+    public void test() {
+        LOGGER.info("This message contains \r\n line feeds");
 
-		// Now verify our logging interactions
-		verify(mockAppender).doAppend(captorLoggingEvent.capture());
+        // Now verify our logging interactions
+        verify(mockAppender).doAppend(captorLoggingEvent.capture());
 
-		// Get the logging event from the captor
-		final LoggingEvent loggingEvent = captorLoggingEvent.getValue();
+        // Get the logging event from the captor
+        final LoggingEvent loggingEvent = captorLoggingEvent.getValue();
 
-		// Check log level is correct
-		assertThat(loggingEvent.getLevel(), is(Level.INFO));
+        // Check log level is correct
+        assertThat(loggingEvent.getLevel(), is(Level.INFO));
 
-		// Check the message being logged is correct
-		// assertThat(loggingEvent.getFormattedMessage(),
-		// is("This message contains __ line feeds"));'
-		String layoutMessage = encoder.getLayout().doLayout(loggingEvent);
-		assertTrue(layoutMessage
-				.contains("This message contains __ line feeds"));
-	}
+        // Check the message being logged is correct
+        // assertThat(loggingEvent.getFormattedMessage(),
+        // is("This message contains __ line feeds"));'
+        String layoutMessage = encoder.getLayout().doLayout(loggingEvent);
+        assertTrue(layoutMessage.contains("This message contains __ line feeds"));
+    }
 
 }

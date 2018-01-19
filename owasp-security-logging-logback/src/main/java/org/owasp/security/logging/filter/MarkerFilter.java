@@ -14,38 +14,38 @@ import ch.qos.logback.core.spi.FilterReply;
  */
 public class MarkerFilter extends AbstractMatcherFilter<ILoggingEvent> {
 
-	Marker markerToMatch;
+    Marker markerToMatch;
 
-	@Override
-	public void start() {
-		if (markerToMatch != null) {
-			super.start();
-		} else {
-			addError(String.format("The marker property must be set for [%s]",
-					getName()));
-		}
-	}
+    @Override
+    public void start() {
+        if (markerToMatch != null) {
+            super.start();
+        } else {
+            addError(String.format("The marker property must be set for [%s]", getName()));
+        }
+    }
 
-	public FilterReply decide(ILoggingEvent event) {
-		Marker marker = event.getMarker();
-		if (!isStarted()) {
-			return FilterReply.NEUTRAL;
-		}
+    @Override
+    public FilterReply decide(ILoggingEvent event) {
+        Marker marker = event.getMarker();
+        if (!isStarted()) {
+            return FilterReply.NEUTRAL;
+        }
 
-		if (marker == null) {
-			return onMismatch;
-		}
+        if (marker == null) {
+            return onMismatch;
+        }
 
-		if (markerToMatch.contains(marker)) {
-			return onMatch;
-		}
-		return onMismatch;
-	}
+        if (markerToMatch.contains(marker)) {
+            return onMatch;
+        }
+        return onMismatch;
+    }
 
-	public void setMarker(String markerStr) {
-		if (markerStr != null) {
-			markerToMatch = MarkerFactory.getMarker(markerStr);
-		}
-	}
+    public void setMarker(String markerStr) {
+        if (markerStr != null) {
+            markerToMatch = MarkerFactory.getMarker(markerStr);
+        }
+    }
 
 }

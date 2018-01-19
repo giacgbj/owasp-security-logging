@@ -22,53 +22,52 @@ import ch.qos.logback.core.rolling.RollingFileAppender;
 @RunWith(MockitoJUnitRunner.class)
 public class SecurityTest {
 
-	LoggerContext loggerContext = (LoggerContext) LoggerFactory
-			.getILoggerFactory();
-	Logger LOGGER;
+    LoggerContext loggerContext = (LoggerContext) LoggerFactory.getILoggerFactory();
+    Logger LOGGER;
 
-	@Mock
-	private RollingFileAppender<ILoggingEvent> mockAppender = new RollingFileAppender<ILoggingEvent>();
+    @Mock
+    private RollingFileAppender<ILoggingEvent> mockAppender = new RollingFileAppender<>();
 
-	// Captor is genericised with ch.qos.logback.classic.spi.LoggingEvent
-	@Captor
-	private ArgumentCaptor<LoggingEvent> captorLoggingEvent;
+    // Captor is genericised with ch.qos.logback.classic.spi.LoggingEvent
+    @Captor
+    private ArgumentCaptor<LoggingEvent> captorLoggingEvent;
 
-	@Before
-	public void setup() {
-		// mockAppender = new RollingFileAppender();
-		mockAppender.setContext(loggerContext);
-		mockAppender.setFile("testFile.log");
+    @Before
+    public void setup() {
+        // mockAppender = new RollingFileAppender();
+        mockAppender.setContext(loggerContext);
+        mockAppender.setFile("testFile.log");
 
-		PatternLayoutEncoder encoder = new PatternLayoutEncoder();
-		encoder.setContext(loggerContext);
-		encoder.setPattern("%-4relative [%thread] %-5level %logger{35} - %msg%n");
-		encoder.start();
+        PatternLayoutEncoder encoder = new PatternLayoutEncoder();
+        encoder.setContext(loggerContext);
+        encoder.setPattern("%-4relative [%thread] %-5level %logger{35} - %msg%n");
+        encoder.start();
 
-		mockAppender.setEncoder(encoder);
-		mockAppender.start();
-		LOGGER = loggerContext.getLogger("Main");
-		LOGGER.addAppender(mockAppender);
+        mockAppender.setEncoder(encoder);
+        mockAppender.start();
+        LOGGER = loggerContext.getLogger("Main");
+        LOGGER.addAppender(mockAppender);
 
-	}
+    }
 
-	@After
-	public void teardown() {
-		LOGGER.detachAppender(mockAppender);
-	}
+    @After
+    public void teardown() {
+        LOGGER.detachAppender(mockAppender);
+    }
 
-	@Test
-	public void injectionTest() {
+    @Test
+    public void injectionTest() {
 
-		LOGGER.info("This message contains \r\n line feeds");
+        LOGGER.info("This message contains \r\n line feeds");
 
-		// Now verify our logging interactions
-		verify(mockAppender).doAppend(captorLoggingEvent.capture());
+        // Now verify our logging interactions
+        verify(mockAppender).doAppend(captorLoggingEvent.capture());
 
-		// Get the logging event from the captor
-		final LoggingEvent loggingEvent = captorLoggingEvent.getValue();
+        // Get the logging event from the captor
+        final LoggingEvent loggingEvent = captorLoggingEvent.getValue();
 
-		System.out.println("MESSAGE: " + loggingEvent.getFormattedMessage());
-		// assertThat(loggingEvent.getFormattedMessage(),
-		// is("This message contains line feeds"));
-	}
+        System.out.println("MESSAGE: " + loggingEvent.getFormattedMessage());
+        // assertThat(loggingEvent.getFormattedMessage(),
+        // is("This message contains line feeds"));
+    }
 }
